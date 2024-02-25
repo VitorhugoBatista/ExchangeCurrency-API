@@ -11,7 +11,7 @@ class Server {
   private swaggerSpec: any;
   constructor(port: string | number) {
     this.app = express();
-    this.port = port;
+    this.port = this.port = process.env.PORT || 3000;
     this.swaggerSpec = swaggerJsdoc(swaggerOptions);
 
     this.middlewares();
@@ -25,6 +25,7 @@ class Server {
   }
 
   private middlewares() {
+    this.app.set('trust proxy', 1);// trust first proxy (Heroku)
     this.app.use(express.json()); 
     this.app.use(express.urlencoded({ extended: true }));
     const limiter = rateLimit({
