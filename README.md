@@ -13,11 +13,24 @@ Each conversion operation is saved as a transaction, allowing users to track the
 ### Embedded SQLite Database
 Leveraging an embedded SQLite database, this database integration facilitates swift data retrieval and transaction storage without the complexities of external database management.
 
+
 ### Rate Limiting
 To ensure uninterrupted service and avoid potential downtimes due to excessive requests, our API implements rate limiting. This crucial feature prevents abuse and guarantees the API's availability and performance, even under high traffic conditions.
 
 ### Scalable
 Whether you're a startup or a large enterprise, our API is built to scale with your needs, handling requests efficiently regardless of volume.
+
+### Automatic Deployment via Heroku
+To automate deployments to Heroku and ensure your application is always up to date with the latest commits in your GitHub repository, you can set up a CI/CD pipeline using GitHub Actions.
+
+## Steps for Setup:
+Heroku CLI and GitHub Secrets:
+
+## Ensure the Heroku CLI is installed and you are logged in.
+In your GitHub repository, go to Settings > Secrets and add the following secrets:
+
+## HEROKU_API_KEY: Your Heroku API key.
+## HEROKU_APP_NAME: The name of your Heroku app.
 
 ## Getting Started
 
