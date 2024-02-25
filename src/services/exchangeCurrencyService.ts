@@ -1,7 +1,7 @@
 import { axiosGet } from "../utils/axiosGet";
 import { Currency } from "../types/currencyTypes";
 import { ErrorHandler } from "../utils/errorHandler";
-import { ExchangeTransaction } from '../entities/exchangesRequest';
+import { ExchangeTransaction } from '../entities/exchangeTransaction';
 import { transactionRepository } from '../repositories/transactionRepository';
 /**
  * Converts a value between currencies using the ExchangeRate-API.

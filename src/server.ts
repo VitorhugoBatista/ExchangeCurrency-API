@@ -6,7 +6,7 @@ import { swaggerOptions } from '../swaggerOptions';
 import swaggerJsdoc from 'swagger-jsdoc';
 
 class Server {
-  private app: Express;
+  public app: Express;
   private port: string | number;
   private swaggerSpec: any;
   constructor(port: string | number) {
@@ -16,6 +16,12 @@ class Server {
 
     this.middlewares();
     this.routes();
+  }
+
+  public start() {
+    this.app.listen(this.port, () => {
+      console.log(`Server running on http://localhost:${this.port}`);
+    });
   }
 
   private middlewares() {

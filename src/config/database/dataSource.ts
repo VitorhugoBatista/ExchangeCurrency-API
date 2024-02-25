@@ -1,5 +1,5 @@
 import { DataSource } from 'typeorm';
-import { ExchangeTransaction } from '../../entities/exchangesRequest';
+import { ExchangeTransaction } from '../../entities/exchangeTransaction';
 import path from 'path';
 
 const databasePath = path.join(__dirname, '..', '..', 'config', 'database', 'database.db');
