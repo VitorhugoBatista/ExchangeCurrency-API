@@ -1,13 +1,13 @@
 {
-  "name": "desafio-magalu",
-  "version": "1.0.0",
+  "name": "ExchangeCurrency-API",
+  "version": "1.1",
   "description": "",
   "main": "index.js",
   "scripts": {
     "build": "tsc && copyfiles package.json dist",
     "lint": "eslint src --ext .ts",
     "start": "node dist/src/index.js",
-    "test": "jest",
+    "test": "jest --verbose",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "dev": "ts-node src/index.ts"
