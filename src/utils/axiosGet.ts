@@ -1,29 +1,35 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import { ErrorHandler } from './errorHandler';
-/**
- * Performs a GET request using Axios.
- * 
- * @param {string} url - The URL for the GET request.
- * @param {AxiosRequestConfig} [config] - Optional Axios configuration.
- * @param {string} apiKey - The API key for the request.
- * @returns {Promise<AxiosResponse>} The response from the request.
- * 
- */
-export const axiosGet = async <T = any>(url: string, apiKey: string, config?: AxiosRequestConfig): Promise<AxiosResponse<T>> => {
-  try {
-      if (!config) {
-          config = {};
-      }
-      
-      config.headers = {
-          ...config.headers, 
-          'apikey': apiKey   
-      };
 
-      const response = await axios.get<T>(url, config);
-      return response;
-  } catch (error) {
-      console.error('Error performing GET request:', error);
-      throw new ErrorHandler('Error performing GET request', 'GENERAL'); 
-  }
+export class ExchangeRateServiceIntegration {
+    private apiUrl: string | undefined;
+    private apiKey: string | undefined;
+
+    constructor() {
+        this.apiUrl = process.env.API_EXCHANGE_URL 
+        this.apiKey = process.env.EXCHANGE_RATE_API_KEY ;
+    }
+    
+    async getExchangeRate(fromCurrency: string, toCurrency: string): Promise<number> {
+        const url = `${this.apiUrl}/latest?symbols=${toCurrency}&base=${fromCurrency}`;
+
+        try {
+            const response: AxiosResponse = await axios.get(url, {
+                headers: {
+                    'apikey': this.apiKey
+                }
+            });
+
+            if (response.data && response.data.rates && response.data.rates[toCurrency]) {
+                return response.data.rates[toCurrency];
+            } else {
+                throw new ErrorHandler('Currency not found', 'NOT_FOUND');
+            }
+        } catch (error) {
+            console.error('Error fetching exchange rate:', error);
+            throw new ErrorHandler('Error fetching exchange rate', 'GENERAL');
+        }
+    }
 }
+
+export const exchangeRateServiceIntegration = new ExchangeRateServiceIntegration()

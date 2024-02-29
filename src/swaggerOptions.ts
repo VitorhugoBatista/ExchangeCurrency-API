@@ -2,7 +2,7 @@ import { Options } from 'swagger-jsdoc';
 import path from 'path';
 import fs from 'fs';
 
-const swaggerDocumentPath = path.join(__dirname, 'src/docs/swaggerDocs.json');
+const swaggerDocumentPath = path.join(__dirname, './docs/swaggerDocs.json');
 const swaggerDocument = JSON.parse(fs.readFileSync(swaggerDocumentPath, 'utf-8'));
 
 export const swaggerOptions: Options = {

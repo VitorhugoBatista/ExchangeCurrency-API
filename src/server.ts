@@ -2,18 +2,19 @@ import express, { Express , Request, Response, NextFunction} from 'express';
 import routes from './routes';
 import rateLimit from 'express-rate-limit';
 import swaggerUi from 'swagger-ui-express';
-import { swaggerOptions } from '../swaggerOptions';
+import { swaggerOptions } from './swaggerOptions';
 import swaggerJsdoc from 'swagger-jsdoc';
+import morgan from 'morgan';
 
 class Server {
   public app: Express;
   private port: string | number;
   private swaggerSpec: any;
-  constructor(port: string | number) {
+  constructor(port?: string | number) {
     this.app = express();
-    this.port = this.port = process.env.PORT || 3000;
+    this.port = port || process.env.PORT || 3000; 
     this.swaggerSpec = swaggerJsdoc(swaggerOptions);
-
+    this.app.use(morgan('combined'))
     this.middlewares();
     this.routes();
   }

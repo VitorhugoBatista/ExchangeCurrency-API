@@ -5,7 +5,7 @@
       "version": "1.0"
     },
     "paths": {
-      "/v1/currencyexchange/list/{userId}": {
+  "/v1/user/{userId}/conversions": {
         "get": {
           "summary": "Lists currency conversions by user",
           "tags": ["Conversions"],
@@ -58,7 +58,7 @@
           }
         }
       },
-      "/v1/currencyexchange/": {
+      "/v1/conversions": {
         "post": {
           "summary": "Converts values from one currency to another",
           "tags": ["Conversions"],

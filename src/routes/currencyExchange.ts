@@ -1,11 +1,12 @@
 import { Router } from 'express';
 import { convertCurrencyController } from '../controllers/currencyController';
-import { listConvertCurrencyController } from '../controllers/listCurrencyController';
+import { listConvertCurrencyController } from '../controllers/currencyController';
+import { convertCurrencyValidation } from '../middlewares/convertCurrencyMiddleware';
+import { listTransactionsValidation } from '../middlewares/listTransactionByUserMiddleware';
 
 const router = Router();
 
-router.get('/list/:userId', listConvertCurrencyController);
-
-router.post('/', convertCurrencyController);
+router.post('/conversions', convertCurrencyValidation, convertCurrencyController);
+router.get('/user/:userId/conversions', listTransactionsValidation, listConvertCurrencyController);
 
 export default router;

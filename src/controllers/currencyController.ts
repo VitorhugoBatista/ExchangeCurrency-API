@@ -1,41 +1,40 @@
 import { Request, Response } from 'express';
-import { convertCurrency } from '../services/exchangeCurrencyService';
+import { currencyService} from '../services/exchangeCurrencyService';
 import { Currency } from '../types/currencyTypes'; 
 
-/**
- * Controller for converting currencies.
- * 
- * @param {Request} req - The Express request object.
- * @param {Response} res - The Express response object.
- */
 export const convertCurrencyController = async (req: Request, res: Response) => {
   try {
     const { amount, fromCurrency, toCurrency, userId } = req.body;
-    
-    const supportedCurrencies: Currency[] = ['USD', 'EUR', 'BRL', 'JPY']; 
 
-    if (!amount || !fromCurrency || !toCurrency || !userId) {
-      return res.status(400).json({ error: 'All parameters (amount, fromCurrency, toCurrency, userId) are required.' });
-    }
+    const data = { userId, fromCurrency, toCurrency, amount };
 
-    if (typeof amount !== 'number' || amount <= 0) {
-      return res.status(400).json({ error: 'Invalid amount. Amount must be a positive number.' });
-    }
-
-    if (!supportedCurrencies.includes(fromCurrency) || !supportedCurrencies.includes(toCurrency)) {
-      return res.status(400).json({ error: 'Unsupported currency. Please use one of the supported currencies.' });
-    }
-
-    const userIdNumber = Number(userId);
-    if (isNaN(userIdNumber) || userIdNumber <= 0) {
-      return res.status(400).json({ error: 'Invalid userId. UserId must be a positive number.' });
-    }
-
-    const convertedAmount = await convertCurrency(amount, fromCurrency, toCurrency, userIdNumber);
+    const convertedAmount = await currencyService.convertCurrency(data);
 
     res.json({ convertedAmount });
+
   } catch (error) {
     console.error('Error converting currency:', error);
+
     res.status(500).json({ error: 'Error converting currency.' });
+  }
+  
+};
+
+ export const listConvertCurrencyController = async (req: Request, res: Response) => {
+  try {
+      let userId = parseInt(req.params.userId);
+
+      const listTransactionsbyUserId = await currencyService.listTransactions(userId);
+
+      if (listTransactionsbyUserId.length === 0) {
+          return res.status(404).json({ error: 'No transactions found for the given userId.' });
+      }
+
+      res.json({ transactions: listTransactionsbyUserId });
+      
+  } catch (error) {
+      console.error('Error listing transactions:', error);
+
+      res.status(500).json({ error: 'Error listing transactions.' });
   }
 };
