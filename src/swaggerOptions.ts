@@ -1,11 +1,13 @@
-import { Options } from 'swagger-jsdoc';
-import path from 'path';
-import fs from 'fs';
+import { Options } from "swagger-jsdoc";
+import path from "path";
+import fs from "fs";
 
-const swaggerDocumentPath = path.join(__dirname, './docs/swaggerDocs.json');
-const swaggerDocument = JSON.parse(fs.readFileSync(swaggerDocumentPath, 'utf-8'));
+const swaggerDocumentPath = path.join(__dirname, "./docs/swaggerDocs.json");
+const swaggerDocument = JSON.parse(
+  fs.readFileSync(swaggerDocumentPath, "utf-8"),
+);
 
 export const swaggerOptions: Options = {
   definition: swaggerDocument,
-  apis: ['./dist/src/routes/*.js', '../src/routes/*.ts'], 
+  apis: ["./dist/src/routes/*.js", "../src/routes/*.ts"],
 };

@@ -2,27 +2,27 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 @Entity()
 export class ExchangeTransactionEntity {
-    @PrimaryGeneratedColumn()
-    id: number;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column()
-    userId: number; 
-    
-    @Column()
-    sourceCurrency: string;
+  @Column()
+  userId: number;
 
-    @Column()
-    targetCurrency: string;
+  @Column()
+  sourceCurrency: string;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    sourceValue: number;
+  @Column()
+  targetCurrency: string;
 
-    @Column('decimal', { precision: 10, scale: 2 })
-    targetValue: number; 
+  @Column("decimal", { precision: 10, scale: 2 })
+  sourceValue: number;
 
-    @Column('float')
-    conversionRate: number;
+  @Column("decimal", { precision: 10, scale: 2 })
+  targetValue: number;
 
-    @Column({ type: 'text' })
-    date: Date;
+  @Column("float")
+  conversionRate: number;
+
+  @Column({ type: "text" })
+  date: Date;
 }

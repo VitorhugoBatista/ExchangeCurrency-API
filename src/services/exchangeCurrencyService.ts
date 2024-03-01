@@ -1,47 +1,61 @@
-import { ExchangeRateServiceIntegration, exchangeRateServiceIntegration } from "../utils/axiosGet";
+import {
+  ExchangeRateServiceIntegration,
+  exchangeRateServiceIntegration,
+} from "../utils/axiosGet";
 import { ErrorHandler } from "../utils/errorHandler";
-import { ExchangeTransaction} from '../models/transactions/exchangeTransaction';
-import { ExchangeTransactionResponse } from '../models/response/exchangeTransactionResponse';
+import { ExchangeTransaction } from "../models/transactions/exchangeTransaction";
+import { ExchangeTransactionResponse } from "../models/response/exchangeTransactionResponse";
 import { ITransactionRepository } from "../repositories/ITransactionRepository";
 import { transactionRepository } from "../repositories/transactionRepository";
 import { ExchangeTransactionDTO } from "../models/transactions/DTO/exchangeTransactionDTO";
 import { Logger } from "../logger/logger";
+import { IExchangeCurrencyService } from "./IExchangeCurrencyService";
 
-export class CurrencyService {
-    private transactionRepository: ITransactionRepository;
-    private exchangeRateService: ExchangeRateServiceIntegration;
+export class CurrencyService implements IExchangeCurrencyService {
+  private transactionRepository: ITransactionRepository;
+  private exchangeRateFetchService: ExchangeRateServiceIntegration;
 
-    constructor(
-        transactionRepository: ITransactionRepository, 
-        exchangeRateService: ExchangeRateServiceIntegration
-    ) {
-        this.transactionRepository = transactionRepository;
-        this.exchangeRateService = exchangeRateService;
+  constructor(
+    transactionRepository: ITransactionRepository,
+    exchangeRateFetchService: ExchangeRateServiceIntegration,
+  ) {
+    this.transactionRepository = transactionRepository;
+    this.exchangeRateFetchService = exchangeRateFetchService;
+  }
+
+  async convertCurrency(
+    data: ExchangeTransactionDTO,
+  ): Promise<ExchangeTransaction> {
+    const { userId, fromCurrency, toCurrency, amount } = data;
+    try {
+      const exchangeRate = await this.exchangeRateFetchService.getExchangeRate(
+        fromCurrency,
+        toCurrency,
+      );
+      const targetValue = amount * exchangeRate;
+      return await this.transactionRepository.save({
+        userId,
+        sourceCurrency: fromCurrency,
+        targetCurrency: toCurrency,
+        sourceValue: amount,
+        targetValue,
+        conversionRate: exchangeRate,
+        date: new Date(),
+      });
+    } catch (error) {
+      Logger.error("Error converting currency:", error);
+      throw new ErrorHandler("Error converting currency", "GENERAL");
     }
+  }
 
-    async convertCurrency(data: ExchangeTransactionDTO): Promise<ExchangeTransaction> {
-        try {
-            const rate = await this.exchangeRateService.getExchangeRate(data.fromCurrency, data.toCurrency);
-            const convertedAmount = data.amount * rate;
-            const newTransaction = await this.transactionRepository.save({
-                userId: data.userId,
-                sourceCurrency: data.fromCurrency,
-                targetCurrency: data.toCurrency,
-                sourceValue: data.amount,
-                targetValue: convertedAmount,
-                conversionRate: rate,
-                date: new Date(),
-            });
-            return newTransaction;
-        } catch (error) {
-            Logger.error('Error converting currency:', error);
-            throw new ErrorHandler('Error converting currency', 'GENERAL');
-        }
-    }
-
-    async listTransactions(userId: number): Promise<ExchangeTransactionResponse[]> {
-        return await this.transactionRepository.findByUserId(userId);
-    }
+  async listTransactionsByUserId(
+    userId: number,
+  ): Promise<ExchangeTransactionResponse[]> {
+    return await this.transactionRepository.findByUserId(userId);
+  }
 }
 
-export const currencyService = new CurrencyService(transactionRepository, exchangeRateServiceIntegration);
+export const currencyService = new CurrencyService(
+  transactionRepository,
+  exchangeRateServiceIntegration,
+);

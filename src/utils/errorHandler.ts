@@ -1,4 +1,4 @@
-import { ErrorTypes } from './errors';
+import { ErrorTypes } from "./errors";
 
 export class ErrorHandler extends Error {
   public readonly type;
