@@ -5,7 +5,7 @@
       "version": "1.0"
     },
     "paths": {
-  "/v1/user/{userId}/conversions": {
+  "/v1/users/{userId}/conversions": {
         "get": {
           "summary": "Lists currency conversions by user",
           "tags": ["Conversions"],

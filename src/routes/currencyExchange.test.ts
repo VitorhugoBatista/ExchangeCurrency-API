@@ -1,6 +1,8 @@
 import request from "supertest";
 import { app } from "../app";
+import { CurrencyTransactionRequest } from "../controllers/currencyTransaction/CurrencyTransactionRequest";
 import { AppDataSource } from "../config/database/dataSource";
+import { SupportedCurrency } from "../types/SupportedCurrency";
 let apps: any;
 describe("Routers Test /", () => {
   beforeAll(async () => {
@@ -20,7 +22,7 @@ describe("Routers Test /", () => {
   it("should convert currency and return converted amount", async () => {
     const mockData = {
       userId: 1,
-      fromCurrency: "BRL",
+      fromCurrency: "USD",
       toCurrency: "BRL",
       amount: 100,
     };
@@ -28,7 +30,7 @@ describe("Routers Test /", () => {
 
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("convertedAmount");
-  }, 50000);
+  });
 
   it("should return 400 by passing not allowed currency", async () => {
     const mockData = {
@@ -52,7 +54,7 @@ describe("Routers Test /", () => {
   });
 
   it("should return a list of transactions", async () => {
-    const res = await request(apps).get("/v1/user/1/conversions");
+    const res = await request(apps).get("/v1/users/1/conversions");
     expect(res.statusCode).toEqual(200);
   });
 });

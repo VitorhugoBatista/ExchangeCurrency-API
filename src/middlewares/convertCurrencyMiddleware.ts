@@ -1,6 +1,6 @@
 import Joi from "joi";
 import { Request, Response, NextFunction } from "express";
-import { Currency } from "../types/currencyTypes";
+import { SupportedCurrency as Currency } from "../types/SupportedCurrency";
 
 export const convertCurrencyValidation = (
   req: Request,

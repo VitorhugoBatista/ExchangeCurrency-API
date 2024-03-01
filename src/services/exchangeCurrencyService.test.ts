@@ -1,15 +1,18 @@
-import { CurrencyService, currencyService } from "./exchangeCurrencyService";
-import { ExchangeTransactionDTO } from "../models/transactions/DTO/exchangeTransactionDTO";
+import { CurrencyTransactionRequest } from "../controllers/currencyTransaction/CurrencyTransactionRequest";
+import { SupportedCurrency } from "../types/SupportedCurrency";
+import {
+  CurrencyTransactionService,
+  currencyService,
+} from "./CurrencyTransactionService";
 
-//
-jest.mock("../repositories/transactionRepository", () => ({
+jest.mock("../repositories/CurrencyTransactionRepository", () => ({
   transactionRepository: {
     save: jest.fn(),
     findByUserId: jest.fn(),
   },
 }));
 
-jest.mock("../utils/axiosGet", () => ({
+jest.mock("../infra/axiosGet", () => ({
   exchangeRateServiceIntegration: {
     getExchangeRate: jest.fn(),
   },
@@ -17,12 +20,12 @@ jest.mock("../utils/axiosGet", () => ({
 
 describe("CurrencyService", () => {
   const mockedTransactionRepository =
-    require("../repositories/transactionRepository").transactionRepository;
+    require("../repositories/CurrencyTransactionRepository").transactionRepository;
   const mockedExchangeRateService =
-    require("../utils/axiosGet").exchangeRateServiceIntegration;
+    require("../infra/axiosGet").exchangeRateServiceIntegration;
 
   beforeEach(() => {
-    let currencyService = new CurrencyService(
+    let currencyService = new CurrencyTransactionService(
       mockedTransactionRepository,
       mockedExchangeRateService,
     );
@@ -30,12 +33,12 @@ describe("CurrencyService", () => {
   });
 
   it("should convert currency correctly", async () => {
-    const dto: ExchangeTransactionDTO = {
-      userId: 1,
-      fromCurrency: "USD",
-      toCurrency: "EUR",
-      amount: 100,
-    };
+    const dto = new CurrencyTransactionRequest(
+      100,
+      SupportedCurrency.BRL,
+      SupportedCurrency.EUR,
+      1,
+    );
 
     const expectedRate = 0.85;
     const expectedTransaction = {
@@ -51,7 +54,7 @@ describe("CurrencyService", () => {
     mockedExchangeRateService.getExchangeRate.mockResolvedValue(expectedRate);
     mockedTransactionRepository.save.mockResolvedValue(expectedTransaction);
 
-    const result = await currencyService.convertCurrency(dto);
+    const result = await currencyService.convertCurrency(dto.toEntity());
     expect(result).toEqual(expectedTransaction);
     expect(mockedExchangeRateService.getExchangeRate).toHaveBeenCalledWith(
       dto.fromCurrency,
@@ -70,18 +73,19 @@ describe("CurrencyService", () => {
   });
 
   it("should throw an error when converting currency fails", async () => {
-    const dto: ExchangeTransactionDTO = {
-      userId: 1,
-      fromCurrency: "USD",
-      toCurrency: "EUR",
-      amount: 100,
-    };
+    const dto = new CurrencyTransactionRequest(
+      100,
+      SupportedCurrency.BRL,
+      SupportedCurrency.EUR,
+      1,
+    );
+
     mockedExchangeRateService.getExchangeRate.mockRejectedValue(
       new Error("Error converting currency"),
     );
-    await expect(currencyService.convertCurrency(dto)).rejects.toThrow(
-      "Error converting currency",
-    );
+    await expect(
+      currencyService.convertCurrency(dto.toEntity()),
+    ).rejects.toThrow("Error converting currency");
     expect(mockedExchangeRateService.getExchangeRate).toHaveBeenCalledWith(
       dto.fromCurrency,
       dto.toCurrency,

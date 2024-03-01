@@ -1,4 +1,4 @@
-export enum Currency {
+export enum SupportedCurrency {
   BRL = "BRL",
   USD = "USD",
   EUR = "EUR",

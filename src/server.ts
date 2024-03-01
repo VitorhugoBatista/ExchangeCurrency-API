@@ -21,7 +21,7 @@ class Server {
 
   public start() {
     this.app.listen(this.port, () => {
-      console.log(`Server running on http://localhost:${this.port}`);
+      console.log(`Server running on PORT: ${this.port}`);
     });
   }
 
@@ -47,14 +47,8 @@ class Server {
     );
     this.app.use((req: Request, res: Response, next: NextFunction) => {
       res.status(404).json({
-        message: "page not found",
+        message: "resource not found",
       });
-    });
-  }
-
-  public listen() {
-    this.app.listen(this.port, () => {
-      console.log(`Server Running on http://localhost:${this.port}`);
     });
   }
 }

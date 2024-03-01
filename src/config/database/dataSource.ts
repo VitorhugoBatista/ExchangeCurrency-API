@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { ExchangeTransactionEntity } from "../../models/entities/exchangeTransactionEntity";
+import { ExchangeTransactionEntity } from "../../models/CurrencyTransactionEntity";
 import path from "path";
 
 const databasePath = path.join(

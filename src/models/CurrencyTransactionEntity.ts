@@ -3,7 +3,7 @@ import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 @Entity()
 export class ExchangeTransactionEntity {
   @PrimaryGeneratedColumn()
-  id: number;
+  id?: number;
 
   @Column()
   userId: number;

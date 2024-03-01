@@ -1,11 +1,11 @@
-import { ExchangeTransactionResponse } from "../models/response/exchangeTransactionResponse";
-import { ExchangeTransactionDTO } from "../models/transactions/DTO/exchangeTransactionDTO";
-import { ExchangeTransaction } from "../models/transactions/exchangeTransaction";
+import { ExchangeTransactionEntity } from "../models/CurrencyTransactionEntity";
 
 export interface IExchangeCurrencyService {
-  convertCurrency(data: ExchangeTransactionDTO): Promise<ExchangeTransaction>;
+  convertCurrency(
+    data: ExchangeTransactionEntity,
+  ): Promise<ExchangeTransactionEntity>;
 
   listTransactionsByUserId(
     userId: number,
-  ): Promise<ExchangeTransactionResponse[]>;
+  ): Promise<ExchangeTransactionEntity[]>;
 }

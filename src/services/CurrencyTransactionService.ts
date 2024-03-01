@@ -1,17 +1,15 @@
 import {
   ExchangeRateServiceIntegration,
   exchangeRateServiceIntegration,
-} from "../utils/axiosGet";
-import { ErrorHandler } from "../utils/errorHandler";
-import { ExchangeTransaction } from "../models/transactions/exchangeTransaction";
-import { ExchangeTransactionResponse } from "../models/response/exchangeTransactionResponse";
-import { ITransactionRepository } from "../repositories/ITransactionRepository";
-import { transactionRepository } from "../repositories/transactionRepository";
-import { ExchangeTransactionDTO } from "../models/transactions/DTO/exchangeTransactionDTO";
+} from "../infra/axiosGet";
+import { ErrorHandler } from "../infra/errorHandler";
 import { Logger } from "../logger/logger";
+import { ExchangeTransactionEntity } from "../models/CurrencyTransactionEntity";
+import { ITransactionRepository } from "../repositories/ICurrencyTransactionRepository";
+import { transactionRepository } from "../repositories/CurrencyTransactionRepository";
 import { IExchangeCurrencyService } from "./IExchangeCurrencyService";
 
-export class CurrencyService implements IExchangeCurrencyService {
+export class CurrencyTransactionService implements IExchangeCurrencyService {
   private transactionRepository: ITransactionRepository;
   private exchangeRateFetchService: ExchangeRateServiceIntegration;
 
@@ -24,20 +22,25 @@ export class CurrencyService implements IExchangeCurrencyService {
   }
 
   async convertCurrency(
-    data: ExchangeTransactionDTO,
-  ): Promise<ExchangeTransaction> {
-    const { userId, fromCurrency, toCurrency, amount } = data;
+    entity: ExchangeTransactionEntity,
+  ): Promise<ExchangeTransactionEntity> {
+    const { userId, sourceCurrency, targetCurrency, sourceValue } = entity;
     try {
       const exchangeRate = await this.exchangeRateFetchService.getExchangeRate(
-        fromCurrency,
-        toCurrency,
+        sourceCurrency,
+        targetCurrency,
       );
-      const targetValue = amount * exchangeRate;
+      const targetValue = sourceValue * exchangeRate;
+      Logger.info(
+        `Converted ${sourceValue} ${sourceCurrency} to ${targetValue} ${targetCurrency}`,
+      );
+      Logger.info(`Conversion rate: ${exchangeRate}`);
+      Logger.info("saving transaction");
       return await this.transactionRepository.save({
         userId,
-        sourceCurrency: fromCurrency,
-        targetCurrency: toCurrency,
-        sourceValue: amount,
+        sourceCurrency,
+        targetCurrency,
+        sourceValue,
         targetValue,
         conversionRate: exchangeRate,
         date: new Date(),
@@ -50,12 +53,13 @@ export class CurrencyService implements IExchangeCurrencyService {
 
   async listTransactionsByUserId(
     userId: number,
-  ): Promise<ExchangeTransactionResponse[]> {
+  ): Promise<ExchangeTransactionEntity[]> {
+    Logger.info(`Fetching transactions for user ${userId}`);
     return await this.transactionRepository.findByUserId(userId);
   }
 }
 
-export const currencyService = new CurrencyService(
+export const currencyService = new CurrencyTransactionService(
   transactionRepository,
   exchangeRateServiceIntegration,
 );

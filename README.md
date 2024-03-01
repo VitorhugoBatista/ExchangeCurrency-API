@@ -132,7 +132,7 @@ Access comprehensive API documentation by navigating to http://localhost:4000/ap
 
 ### Listing User Transactions
 
-- **Endpoint:** ` /v1/user/{userId}/conversions`
+- **Endpoint:** ` /v1/users/{userId}/conversions`
 - **Method:** GET
 - **Response:**
 ```json
