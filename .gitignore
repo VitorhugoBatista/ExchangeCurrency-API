@@ -9,3 +9,5 @@ crash.log
 .env
 node_modules
 dist
+combined.log
+error.log

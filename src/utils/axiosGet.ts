@@ -6,8 +6,8 @@ export class ExchangeRateServiceIntegration {
     private apiKey: string | undefined;
 
     constructor() {
-        this.apiUrl = process.env.API_EXCHANGE_URL 
-        this.apiKey = process.env.EXCHANGE_RATE_API_KEY ;
+        this.apiUrl = process.env.API_EXCHANGE_URL || 'https://api.apilayer.com/exchangerates_data' // only for demo case env variable is not set
+        this.apiKey = process.env.EXCHANGE_RATE_API_KEY || 'UwPPbrzIHFJM8oEmtWCYXx82vqYVuTda'; // only for demo case env variable is not set
     }
     
     async getExchangeRate(fromCurrency: string, toCurrency: string): Promise<number> {

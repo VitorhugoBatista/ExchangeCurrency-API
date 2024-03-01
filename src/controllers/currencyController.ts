@@ -1,6 +1,6 @@
 import { Request, Response } from 'express';
 import { currencyService} from '../services/exchangeCurrencyService';
-import { Currency } from '../types/currencyTypes'; 
+import { Logger } from '../logger/logger';
 
 export const convertCurrencyController = async (req: Request, res: Response) => {
   try {
@@ -13,7 +13,7 @@ export const convertCurrencyController = async (req: Request, res: Response) => 
     res.json({ convertedAmount });
 
   } catch (error) {
-    console.error('Error converting currency:', error);
+    Logger.error('Error converting currency:', error);
 
     res.status(500).json({ error: 'Error converting currency.' });
   }
@@ -33,7 +33,7 @@ export const convertCurrencyController = async (req: Request, res: Response) => 
       res.json({ transactions: listTransactionsbyUserId });
       
   } catch (error) {
-      console.error('Error listing transactions:', error);
+      Logger.error('Error listing transactions:', error);
 
       res.status(500).json({ error: 'Error listing transactions.' });
   }

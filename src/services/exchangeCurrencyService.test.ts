@@ -47,7 +47,6 @@ describe('CurrencyService', () => {
     mockedTransactionRepository.save.mockResolvedValue(expectedTransaction);
 
     const result = await currencyService.convertCurrency(dto);
-console.log(result, expectedTransaction);
     expect(result).toEqual(expectedTransaction);
     expect(mockedExchangeRateService.getExchangeRate).toHaveBeenCalledWith(dto.fromCurrency, dto.toCurrency);
     expect(mockedTransactionRepository.save).toHaveBeenCalledWith(expect.objectContaining({
@@ -58,6 +57,39 @@ console.log(result, expectedTransaction);
       targetValue: dto.amount * expectedRate,
       conversionRate: expectedRate,
     }));
-  });
+  })
+  
+  it('should throw an error when converting currency fails', async () => {
+    const dto: ExchangeTransactionDTO = {
+      userId: 1,
+      fromCurrency: 'USD',
+      toCurrency: 'EUR',
+      amount: 100
+}; 
+    mockedExchangeRateService.getExchangeRate.mockRejectedValue(new Error('Error converting currency'));
+    await expect(currencyService.convertCurrency(dto)).rejects.toThrow('Error converting currency');
+    expect(mockedExchangeRateService.getExchangeRate).toHaveBeenCalledWith(dto.fromCurrency, dto.toCurrency);});
 
-});
+it('should list transactions correctly', async () => {
+  const dto = {
+    userId: 1
+  };
+
+  const expectedTransactions = [{
+    userId: dto.userId,
+    sourceCurrency: 'USD',
+    targetCurrency: 'EUR',
+    sourceValue: 100,
+    targetValue: 85,
+    conversionRate: 0.85,
+    date: expect.any(Date),
+  }];
+
+  mockedTransactionRepository.findByUserId.mockResolvedValue(expectedTransactions);
+
+  const result = await currencyService.listTransactions(dto.userId);
+  expect(result).toEqual(expectedTransactions);
+  expect(mockedTransactionRepository.findByUserId).toHaveBeenCalledWith(dto.userId);
+
+})
+})

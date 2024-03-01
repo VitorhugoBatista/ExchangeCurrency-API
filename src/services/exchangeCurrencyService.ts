@@ -5,6 +5,7 @@ import { ExchangeTransactionResponse } from '../models/response/exchangeTransact
 import { ITransactionRepository } from "../repositories/ITransactionRepository";
 import { transactionRepository } from "../repositories/transactionRepository";
 import { ExchangeTransactionDTO } from "../models/transactions/DTO/exchangeTransactionDTO";
+import { Logger } from "../logger/logger";
 
 export class CurrencyService {
     private transactionRepository: ITransactionRepository;
@@ -33,7 +34,7 @@ export class CurrencyService {
             });
             return newTransaction;
         } catch (error) {
-            console.error('Error converting currency:', error);
+            Logger.error('Error converting currency:', error);
             throw new ErrorHandler('Error converting currency', 'GENERAL');
         }
     }

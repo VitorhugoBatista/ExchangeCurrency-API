@@ -103,7 +103,7 @@ Access comprehensive API documentation by navigating to http://localhost:4000/ap
 
 ## Converting Currency
 
-- **Endpoint:** `/v1/currencyexchange/`
+- **Endpoint:** `/v1/conversions`
 - **Method:** POST
 - **Body:**
 
@@ -132,7 +132,7 @@ Access comprehensive API documentation by navigating to http://localhost:4000/ap
 
 ### Listing User Transactions
 
-- **Endpoint:** ` /v1/currencyexchange/list/{userId}`
+- **Endpoint:** ` /v1/user/{userId}/conversions`
 - **Method:** GET
 - **Response:**
 ```json
