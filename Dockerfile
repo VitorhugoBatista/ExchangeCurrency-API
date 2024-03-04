@@ -7,4 +7,4 @@ RUN npm install --build-from-source
 COPY . /app
 RUN npm run build
 EXPOSE 4000
-CMD ["node", "dist/src/index.js"]
+CMD ["node", "dist/src/app.js"]
