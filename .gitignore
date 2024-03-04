@@ -6,8 +6,8 @@ crash.log
 
 # For built boxes
 *.box
-.env
 node_modules
 dist
 combined.log
 error.log
+*.db

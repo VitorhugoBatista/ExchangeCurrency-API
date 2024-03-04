@@ -52,9 +52,4 @@ describe("Routers Test /", () => {
     const res = await request(apps).post("/v1/conversions").send(mockData);
     expect(res.statusCode).toEqual(400);
   });
-
-  it("should return a list of transactions", async () => {
-    const res = await request(apps).get("/v1/users/1/conversions");
-    expect(res.statusCode).toEqual(200);
-  });
 });

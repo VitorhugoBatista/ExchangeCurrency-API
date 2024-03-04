@@ -48,7 +48,6 @@ Add the following variables to the .env file, replacing your_api_url, your_api_k
 ```
 API_EXCHANGE_URL=your_api_url
 EXCHANGE_RATE_API_KEY=your_api_key
-SERVER_PORT=server_port
 ```
 ### Pre requisites
 ```

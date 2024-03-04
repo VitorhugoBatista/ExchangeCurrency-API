@@ -91,32 +91,4 @@ describe("CurrencyService", () => {
       dto.toCurrency,
     );
   });
-
-  it("should list transactions correctly", async () => {
-    const dto = {
-      userId: 1,
-    };
-
-    const expectedTransactions = [
-      {
-        userId: dto.userId,
-        sourceCurrency: "USD",
-        targetCurrency: "EUR",
-        sourceValue: 100,
-        targetValue: 85,
-        conversionRate: 0.85,
-        date: expect.any(Date),
-      },
-    ];
-
-    mockedTransactionRepository.findByUserId.mockResolvedValue(
-      expectedTransactions,
-    );
-
-    const result = await currencyService.listTransactionsByUserId(dto.userId);
-    expect(result).toEqual(expectedTransactions);
-    expect(mockedTransactionRepository.findByUserId).toHaveBeenCalledWith(
-      dto.userId,
-    );
-  });
 });

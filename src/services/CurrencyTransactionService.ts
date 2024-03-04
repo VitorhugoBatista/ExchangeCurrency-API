@@ -25,30 +25,25 @@ export class CurrencyTransactionService implements IExchangeCurrencyService {
     entity: ExchangeTransactionEntity,
   ): Promise<ExchangeTransactionEntity> {
     const { userId, sourceCurrency, targetCurrency, sourceValue } = entity;
-    try {
-      const exchangeRate = await this.exchangeRateFetchService.getExchangeRate(
-        sourceCurrency,
-        targetCurrency,
-      );
-      const targetValue = sourceValue * exchangeRate;
-      Logger.info(
-        `Converted ${sourceValue} ${sourceCurrency} to ${targetValue} ${targetCurrency}`,
-      );
-      Logger.info(`Conversion rate: ${exchangeRate}`);
-      Logger.info("saving transaction");
-      return await this.transactionRepository.save({
-        userId,
-        sourceCurrency,
-        targetCurrency,
-        sourceValue,
-        targetValue,
-        conversionRate: exchangeRate,
-        date: new Date(),
-      });
-    } catch (error) {
-      Logger.error("Error converting currency:", error);
-      throw new ErrorHandler("Error converting currency", "GENERAL");
-    }
+    const exchangeRate = await this.exchangeRateFetchService.getExchangeRate(
+      sourceCurrency,
+      targetCurrency,
+    );
+    const targetValue = sourceValue * exchangeRate;
+    Logger.info(
+      `Converted value: ${sourceValue}, conversion rate: ${exchangeRate}`,
+    );
+    Logger.info("Saving transaction");
+
+    return await this.transactionRepository.save({
+      userId,
+      sourceCurrency,
+      targetCurrency,
+      sourceValue,
+      targetValue,
+      conversionRate: exchangeRate,
+      date: new Date(),
+    });
   }
 
   async listTransactionsByUserId(

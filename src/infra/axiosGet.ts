@@ -6,10 +6,8 @@ export class ExchangeRateServiceIntegration {
   private apiKey: string | undefined;
 
   constructor() {
-    this.apiUrl =
-      process.env.API_EXCHANGE_URL 
-    this.apiKey =
-      process.env.EXCHANGE_RATE_API_KEY ;
+    this.apiUrl = process.env.API_EXCHANGE_URL;
+    this.apiKey = process.env.EXCHANGE_RATE_API_KEY;
   }
 
   async getExchangeRate(
@@ -17,7 +15,12 @@ export class ExchangeRateServiceIntegration {
     toCurrency: string,
   ): Promise<number> {
     const url = `${this.apiUrl}/latest?symbols=${toCurrency}&base=${fromCurrency}`;
-
+    if (!this.apiUrl) {
+      throw new ErrorHandler("API URL not provided", "GENERAL");
+    }
+    if (!this.apiKey) {
+      throw new ErrorHandler("API key not provided", "UNAUTHORIZED");
+    }
     try {
       const response: AxiosResponse = await axios.get(url, {
         headers: {

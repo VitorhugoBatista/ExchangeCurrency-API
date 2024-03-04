@@ -9,24 +9,25 @@ export const currencyTransactionController = async (
 ) => {
   try {
     const { amount, fromCurrency, toCurrency, userId } = req.body;
-    const transactionRequest = new CurrencyTransactionRequest(
+    const transaction = new CurrencyTransactionRequest(
       amount,
       fromCurrency,
       toCurrency,
       userId,
     );
-    Logger.info(
-      `Converting ${transactionRequest.amount} ${transactionRequest.fromCurrency} to ${transactionRequest.toCurrency}`,
+    const convertedAmount = await currencyService.convertCurrency(
+      transaction.toEntity(),
     );
-    const toEntity = transactionRequest.toEntity();
-    const convertedAmount = await currencyService.convertCurrency(toEntity);
-    Logger.info(
-      `Converted ${transactionRequest.amount} ${transactionRequest.fromCurrency} to ${convertedAmount.targetValue} ${convertedAmount.targetCurrency}`,
-    );
-    res.json({ convertedAmount });
-  } catch (error) {
-    Logger.error("Error converting currency:", error);
-    res.status(500).json({ errors: "Error converting currency.", error });
+    res.status(200).json({ convertedAmount });
+  } catch (error: any) {
+    if (!res.headersSent) {
+      if (error.type === "GENERAL") {
+        return res.status(400).json({ error: "missing or invalid API URL" });
+      } else if (error.type === "UNAUTHORIZED") {
+        return res.status(400).json({ error: "missing or invalid API key" });
+      }
+      return res.status(500).json({ error: "Internal server error" });
+    }
   }
 };
 
@@ -35,8 +36,7 @@ export const listConvertCurrencyController = async (
   res: Response,
 ) => {
   try {
-    let userId = parseInt(req.params.userId);
-    Logger.info(`Fetching transactions for user ${userId}`);
+    let userId = parseInt(req.params.id);
     const listTransactionsbyUserId =
       await currencyService.listTransactionsByUserId(userId);
 
@@ -48,9 +48,7 @@ export const listConvertCurrencyController = async (
 
     res.json({ transactions: listTransactionsbyUserId });
   } catch (error) {
-    Logger.error("Error listing transactions:", error);
-
+    console.log(error);
     res.status(500).json({ error: "Error listing transactions." });
   }
 };
-export { CurrencyTransactionRequest };
