@@ -98,6 +98,20 @@ docker run -p 4000:4000 currency-conversion-api
 
 Access comprehensive API documentation by navigating to http://localhost:4000/api-docs after starting the server. This interactive documentation allows you to explore available endpoints, try out the API in real-time, and view request/response examples.
 
+## Enhanced Validation with Class Validator
+
+To ensure the integrity and correctness of data received by our API, we employ robust input validation using Class Validator. This validation framework allows us to enforce specific rules and constraints on the data being submitted, ensuring that only valid and expected data is processed by our controllers.
+
+## Converting Currency - Input Validation
+
+### When converting currency, the following validations are applied to the request body:
+
+**userId**: Must be an integer. This ensures that the user ID is valid and refers to an existing user.
+
+**fromCurrency and toCurrency**: Must be strings that correspond to valid ISO 4217 currency codes. This validation ensures that the currencies are recognized and supported by our service.
+
+**amount**: Must be a positive number. This checks that the amount to be converted is a valid, positive value.
+
 # USAGE
 
 ## Converting Currency
