@@ -6,10 +6,11 @@
   "scripts": {
     "build": "tsc && copyfiles package.json dist",
     "format": "prettier --write \"src/**/*.ts\"",
+    "migrate": "npx typeorm-ts-node-esm migration:run --dataSource=dist/config/database/dataSource.js",
     "format:check": "prettier --check \"src/**/*.ts\"",
     "lint": "eslint src --ext .ts",
-    "start": "node dist/app.js",
-    "test": "jest --verbose",
+    "start": "npm run migrate && node dist/app.js",
+    "test": "jest --verbose --detectOpenHandles --forceExit --runInBand",
     "test:watch": "jest --watch",
     "test:coverage": "jest --coverage",
     "dev": "ts-node src/app.ts"

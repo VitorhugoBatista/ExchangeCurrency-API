@@ -1,8 +1,11 @@
 import { IsIn, IsNotEmpty, IsNumber, IsPositive } from "class-validator";
-import { ExchangeTransactionEntity } from "../../models/CurrencyTransactionEntity";
+import { ExchangeTransactionEntity } from "../../models/entities/CurrencyTransaction.entity";
 import { SupportedCurrency } from "../../types/SupportedCurrency";
+import { ExchangeTransactionRequestDTO } from "../../dtos/ExchangeCurrencyRequest.dto";
 
-export class CurrencyTransactionRequest {
+export class CurrencyTransactionRequest
+  implements ExchangeTransactionRequestDTO
+{
   @IsNumber()
   @IsPositive()
   amount: number;
@@ -19,24 +22,5 @@ export class CurrencyTransactionRequest {
   @IsPositive()
   userId: number;
 
-  constructor(
-    amount: number,
-    fromCurrency: SupportedCurrency,
-    toCurrency: SupportedCurrency,
-    userId: number,
-  ) {
-    this.amount = amount;
-    this.fromCurrency = fromCurrency;
-    this.toCurrency = toCurrency;
-    this.userId = userId;
-  }
-
-  toEntity(): ExchangeTransactionEntity {
-    const entity = new ExchangeTransactionEntity();
-    entity.sourceValue = this.amount;
-    entity.sourceCurrency = this.fromCurrency;
-    entity.targetCurrency = this.toCurrency;
-    entity.userId = this.userId;
-    return entity;
-  }
+  constructor() {}
 }

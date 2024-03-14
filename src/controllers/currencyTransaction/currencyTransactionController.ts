@@ -8,16 +8,7 @@ export const currencyTransactionController = async (
   res: Response,
 ) => {
   try {
-    const { amount, fromCurrency, toCurrency, userId } = req.body;
-    const transaction = new CurrencyTransactionRequest(
-      amount,
-      fromCurrency,
-      toCurrency,
-      userId,
-    );
-    const convertedAmount = await currencyService.convertCurrency(
-      transaction.toEntity(),
-    );
+    const convertedAmount = await currencyService.convertCurrency(req.body);
     res.status(200).json({ convertedAmount });
   } catch (error: any) {
     if (!res.headersSent) {
@@ -48,7 +39,6 @@ export const listConvertCurrencyController = async (
 
     res.json({ transactions: listTransactionsbyUserId });
   } catch (error) {
-    console.log(error);
     res.status(500).json({ error: "Error listing transactions." });
   }
 };

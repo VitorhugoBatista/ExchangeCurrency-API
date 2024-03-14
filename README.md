@@ -54,6 +54,27 @@ EXCHANGE_RATE_API_KEY=your_api_key
 - Node.js (v14.x or later)
 - npm (v6.x or later) or Yarn (v1.22.x or later)
 ```
+### Running Migrations
+
+This project uses TypeORM for database migration management. Migrations are important for applying controlled and versioned schema changes to the database.
+
+### Automatic Migration on Start
+Migrations are automatically applied when starting the application. This ensures that your database schema is always up to date with the current version of the application.
+
+### Manually Applying Migrations
+
+In addition to automatic migrations, you can manually apply migrations using the npm migrate command. This is particularly useful for applying migrations in environments where the automatic application on start is not feasible or for manual control over the migration process.
+
+To manually apply pending migrations and update your database to the latest version, use the following command:
+```
+npm run migrate
+
+```
+### or directly via TypeORM:
+```
+npx typeorm-ts-node-esm migration:run --dataSource=dist/config/database/dataSource.js
+```
+Remember to run these commands after pulling the latest changes from the repository to ensure your database schema is aligned with the application's requirements.
 
 ### Installation
 

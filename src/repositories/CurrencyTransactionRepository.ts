@@ -1,5 +1,5 @@
 import { AppDataSource } from "../config/database/dataSource";
-import { ExchangeTransactionEntity } from "../models/CurrencyTransactionEntity";
+import { ExchangeTransactionEntity } from "../models/entities/CurrencyTransaction.entity";
 import { ITransactionRepository } from "./ICurrencyTransactionRepository";
 
 class CurrencyTransactionRepository implements ITransactionRepository {

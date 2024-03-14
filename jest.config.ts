@@ -7,6 +7,7 @@ const config: Config.InitialOptions = {
     '^.+\\.(t|j)sx?$': 'ts-jest',
   },
   moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json', 'node'],
+  testMatch: ['**/*.test.ts', '**/*.test.tsx'], 
   testPathIgnorePatterns: ['/node_modules/'],
 };
 

@@ -1,4 +1,4 @@
-import { ExchangeTransactionEntity } from "../models/CurrencyTransactionEntity";
+import { ExchangeTransactionEntity } from "../models/entities/CurrencyTransaction.entity";
 
 export interface ITransactionRepository {
   save(

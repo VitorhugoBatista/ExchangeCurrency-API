@@ -1,5 +1,5 @@
 import { DataSource } from "typeorm";
-import { ExchangeTransactionEntity } from "../../models/CurrencyTransactionEntity";
+import { ExchangeTransactionEntity } from "../../models/entities/CurrencyTransaction.entity";
 import path from "path";
 
 const databasePath = path.join(
@@ -13,8 +13,9 @@ const databasePath = path.join(
 
 export const AppDataSource = new DataSource({
   type: "sqlite",
-  database: databasePath,
-  synchronize: true,
+  database: path.join(__dirname, "..", "..", "..", "data", "database.sqlite"),
+  synchronize: false,
   logging: false,
   entities: [ExchangeTransactionEntity],
+  migrations: [path.join(__dirname, "..", "..", "migrations", "*.js")],
 });
